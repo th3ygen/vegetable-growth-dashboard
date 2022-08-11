@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import { Provider as ReduxProvider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 
+import { Connector as MQTTConnector } from "./features/mqtt";
+
 import "./index.scss";
 import "antd/dist/antd.min.css";
 
@@ -15,9 +17,17 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<ReduxProvider store={store}>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
+			<MQTTConnector
+				protocol="wss"
+				broker="mqtt.sollab.dev"
+				port="8083"
+				username="mqtt"
+				password="syafiq29"
+			>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</MQTTConnector>
 		</ReduxProvider>
 	</React.StrictMode>
 );
