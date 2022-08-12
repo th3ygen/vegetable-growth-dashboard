@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 import ThemeToggler from "../features/themeToggle/ThemeToggler";
 
+import theme from "../app/theme";
+
 const Wrapper = styled.div`
 	display: flex;
 	padding: 20px;
@@ -9,7 +11,7 @@ const Wrapper = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    background-color: #5edd84;
+    background-color: ${theme.panelBackgroundColor};
     color: white;
 
     border-radius: 20px;
@@ -27,10 +29,11 @@ const Actions = styled.div`
 	gap: 10px;
 `;
 
-export default function Navbar(props) {
+export default function Topbar() {
 	return (
 		<Wrapper>
-			<Title>Topbar title here</Title>
+			<Title>
+			</Title>
 			<Actions>
 				<ThemeToggler />
 			</Actions>
