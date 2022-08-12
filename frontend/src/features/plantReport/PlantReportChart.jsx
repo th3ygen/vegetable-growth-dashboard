@@ -12,7 +12,7 @@ import { useMqtt } from "../mqtt";
 
 const Chart = styled.div`
 	width: 100%;
-	height: 500px;
+	height: 70vh;
 `;
 
 const COLOR = [
@@ -44,7 +44,7 @@ export default function PlantReportChart() {
 					d["week"] = parseInt(d.label.split(" ")[1][1]);
 					d["name"] = d.label.split(" ")[0];
                     d["settings"] = {
-                        fill: COLOR[0],
+                        fill: COLOR[1],
                     }
 
 					delete d["label"];

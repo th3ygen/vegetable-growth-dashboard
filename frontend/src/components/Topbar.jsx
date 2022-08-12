@@ -30,7 +30,7 @@ const Actions = styled.div`
 export default function Navbar(props) {
 	return (
 		<Wrapper>
-			<Title>Topbar title here</Title>
+			<Title>Plant report</Title>
 			<Actions>
 				<ThemeToggler />
 			</Actions>
