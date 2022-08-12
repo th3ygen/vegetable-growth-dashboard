@@ -35,7 +35,7 @@ export default function PlantReportChart() {
 	const mqtt = useMqtt();
 
 	useEffect(() => {
-		if (status === "connected") {
+		if (status === "connected" && mqtt) {
 			mqtt.subscribe("justGood/data/+");
 
 			mqtt.on("message", (topic, message) => {

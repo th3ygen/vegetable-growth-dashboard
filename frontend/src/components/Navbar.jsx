@@ -2,6 +2,9 @@ import React, { Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
+
+import { setTitle } from "../features/headTitle/slice";
 
 import theme from "../app/theme";
 
@@ -94,18 +97,21 @@ const SideIcon = styled.div`
 let items = [
 	{
 		name: "Plant report",
+		exName: "Dashboard",
 		path: "/user/dashboard",
 		icon: "fa-solid fa-newspaper",
 		active: true,
 	},
 	{
 		name: "Growth Observation",
+		exName: "Growth Observation",
 		path: "/user/growth",
 		icon: "fa-solid fa-leaf",
 		active: false,
 	},
 	{
 		name: "Crops Estimation",
+		exName: "Crops Estimation",
 		path: "/user/estimation",
 		icon: "fa-solid fa-bullseye",
 		active: false,
@@ -114,14 +120,17 @@ let items = [
 
 export default function Navbar() {
 	let navigate = useNavigate();
+	let dispatch = useDispatch();
 
-	function handleClick(path) {
-		navigate(path);
+	function handleClick(item) {
+		navigate(item.path);
 
-		items.forEach((item) => {
-			item.active = false;
-			if (item.path === path) {
-				item.active = true;
+		dispatch(setTitle(item.exName));
+
+		items.forEach((i) => {
+			i.active = false;
+			if (i.path === item.path) {
+				i.active = true;
 			}
 		});
 	}
@@ -142,7 +151,7 @@ export default function Navbar() {
 					return item.active ? (
 						<ActiveSideContent
 							key={index}
-							onClick={() => handleClick(item.path)}
+							onClick={() => handleClick(item)}
 						>
 							<SideIcon>
 								<FontAwesomeIcon icon={item.icon} />
@@ -152,7 +161,7 @@ export default function Navbar() {
 					) : (
 						<SideContent
 							key={index}
-							onClick={() => handleClick(item.path)}
+							onClick={() => handleClick(item)}
 						>
 							<SideIcon>
 								<FontAwesomeIcon icon={item.icon} />

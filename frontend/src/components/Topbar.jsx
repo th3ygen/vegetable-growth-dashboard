@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 import ThemeToggler from "../features/themeToggle/ThemeToggler";
 
@@ -30,9 +32,16 @@ const Actions = styled.div`
 `;
 
 export default function Topbar() {
+	const { title } = useSelector(state => state.topbar);
+
+	/* useEffect(() => {
+
+	}, [title]); */
+
 	return (
 		<Wrapper>
 			<Title>
+				{title}
 			</Title>
 			<Actions>
 				<ThemeToggler />
