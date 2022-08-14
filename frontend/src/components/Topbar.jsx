@@ -9,6 +9,13 @@ import theme from "../app/theme";
 import { DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, message, Space } from 'antd';
 
+const NewButton = styled(Button)`
+	background: red !important;
+`;
+
+const NewMenu = styled(Menu)`
+	background: orange !important;
+`
 
 const Wrapper = styled.div`
 	display: flex;
@@ -41,7 +48,7 @@ const handleMenuClick = (e) => {
 };
 
 const menu = (
-	<Menu
+	<NewMenu
 		onClick={handleMenuClick}
 		items={[
 			{
@@ -72,12 +79,12 @@ export default function Topbar() {
 			</Title>
 			<Space wrap>
 				<Dropdown overlay={menu}>
-					<Button>
+					<NewButton>
 						<Space>
 							<UserOutlined />
 							User 1
 						</Space>
-					</Button>
+					</NewButton>
 				</Dropdown>
 			</Space>
 		</Wrapper>
