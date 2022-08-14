@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,7 +8,7 @@ import ThemeToggler from "../features/themeToggle/ThemeToggler";
 import theme from "../app/theme";
 
 import { DownOutlined, UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, message, Space } from 'antd';
+import { Button, Dropdown, Menu, message, Space, PageHeader } from 'antd';
 
 const NewButton = styled(Button)`
 	background: red !important;
@@ -32,9 +33,19 @@ const Wrapper = styled.div`
     width: 100%;
 `;
 
-const Title = styled.div`
-	font-size: 1.5rem;
-	font-weight: bold;
+const Title = styled(PageHeader)`
+	padding: 0 5px;
+	
+	* {
+		font-size: 1.3rem;
+		
+		/* font-weight: bold; */
+		color: white;
+	}
+
+	span:nth-child(2) {
+		padding-left: 15px;
+	}
 `;
 
 const Actions = styled.div`
@@ -42,46 +53,55 @@ const Actions = styled.div`
 	position: relative;
 `;
 
-const handleMenuClick = (e) => {
-	message.info('Click on menu item.');
-	console.log('click', e);
-};
 
-const menu = (
-	<NewMenu
-		onClick={handleMenuClick}
-		items={[
-			{
-				label: <ThemeToggler />,
-				key: '2',
-			},
-			{
-				label: 'Settings',
-				key: '3',
-				icon: <SettingOutlined />,
-			},
-			{
-				label: 'Logout',
-				key: '1',
-				icon: <LogoutOutlined />,
-			},
-		]}
-	/>
-);
 
 
 export default function Topbar() {
+	const navigate = useNavigate();
+
 	const { title } = useSelector(state => state.topbar);
 
-	/* useEffect(() => {
+	const menuItems = [
+		{
+			label: <ThemeToggler />,
+			key: '2',
+		},
+		{
+			label: 'Settings',
+			key: '3',
+			icon: <SettingOutlined />,
+			path: '/user/settings'
+		},
+		{
+			label: 'Logout',
+			key: '1',
+			icon: <LogoutOutlined />,
+		},
+	];
+	
+	const handleMenuClick = (e) => {
+		const { key } = e;
+	
+		const item = menuItems.find(item => item.key === key);
 
-	}, [title]); */
+		if (item.path) {
+			navigate(item.path);
+		}
+	};
+	
+	const menu = (
+		<NewMenu
+			onClick={handleMenuClick}
+			items={menuItems}
+		/>
+	);
 
 	return (
 		<Wrapper>
-			<Title>
-				{title}
-			</Title>
+			<Title 
+				title={title}
+				onBack={() => null}
+			/>
 			<Space wrap>
 				<Dropdown overlay={menu}>
 					<NewButton>

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -73,21 +73,15 @@ const SideContent = styled.div`
 	align-items: center;
 	padding: 10px;
 	gap: 10px;
+	border-radius: 5px;
 
-	transition: all 0.3s ease-in-out;
+	transition: all 0.3s;
 
 	&:hover {
 		cursor: pointer;
 	}
-`;
 
-const ActiveSideContent = styled(SideContent)`
-	background: #f3f3e7;
-	color: #054b1a;
-	border-radius: 5px;
-	height: fit-content;
-
-	transition: all 0.3s ease-in-out;
+	${(props) => props.active && `background: #f3f3e7; color: #054b1a;`}
 `;
 
 const SideIcon = styled.div`
@@ -95,57 +89,67 @@ const SideIcon = styled.div`
 	font-size: 1.5rem;
 `;
 
-let items = [
-	{
-		id: 1,
-		name: "Plant report",
-		exName: "Dashboard",
-		path: "/user/dashboard",
-		icon: "fa-solid fa-newspaper",
-		active: true,
-	},
-	{
-		id: 2,
-		name: "Growth Observation",
-		exName: "Growth Observation",
-		path: "/user/growth",
-		icon: "fa-solid fa-leaf",
-		active: false,
-	},
-	{
-		id: 3,
-		name: "Crops Estimation",
-		exName: "Crops Estimation",
-		path: "/user/estimation",
-		icon: "fa-solid fa-bullseye",
-		active: false,
-	},
-];
-
 export default function Navbar() {
 	let navigate = useNavigate();
 	let dispatch = useDispatch();
 	let location = useLocation();
+	let [items, setItems] = useState([
+		{
+			id: 1,
+			name: "Plant report",
+			exName: "Dashboard",
+			path: "/user/dashboard",
+			icon: "fa-solid fa-newspaper",
+			active: true,
+		},
+		{
+			id: 2,
+			name: "Growth Observation",
+			exName: "Growth Observation",
+			path: "/user/growth",
+			icon: "fa-solid fa-leaf",
+			active: false,
+		},
+		{
+			id: 3,
+			name: "Crops Estimation",
+			exName: "Crops Estimation",
+			path: "/user/estimation",
+			icon: "fa-solid fa-bullseye",
+			active: false,
+		},
+	]);
 
 	useEffect(() => {
 		if (location) {
-			const item = items.find(item => location.pathname === item.path);
+			const item = items.find((item) => location.pathname === item.path);
 
+			let oItems = [...items];
 			if (item) {
+				oItems.forEach((i) => {
+					i.active = false;
+					if (i.path === item.path) {
+						i.active = true;
+					}
+				});
+
+				setItems(oItems);
+
 				dispatch(setTitle(item.exName));
+			} else if (location.pathname === "/user/settings") {
+				oItems.forEach((item) => {
+					item.active = false;
+				});
+
+				setItems(oItems);
+
+				dispatch(setTitle("System settings"));
 			}
 		}
-	}, [dispatch, location]);
+	}, [dispatch, location, items]);
 
 	function handleClick(item) {
 		navigate(item.path);
-		
-		items.forEach((i) => {
-			i.active = false;
-			if (i.path === item.path) {
-				i.active = true;
-			}
-		});
 	}
 
 	return (
@@ -154,27 +158,22 @@ export default function Navbar() {
 				<LogoCard>
 					<Logo>
 						<Suspense fallback={<div>Loading...</div>}>
-							<img src="/public/images/logo.png" alt="logo" width={200}/>
+							<img
+								src="/public/images/logo.png"
+								alt="logo"
+								width={200}
+							/>
 						</Suspense>
 					</Logo>
 				</LogoCard>
 			</Box>
 			<NavList>
 				{items.map((item, index) => {
-					return item.active ? (
-						<ActiveSideContent
-							key={index}
-							onClick={() => handleClick(item)}
-						>
-							<SideIcon>
-								<FontAwesomeIcon icon={item.icon} />
-							</SideIcon>
-							<div>{item.name}</div>
-						</ActiveSideContent>
-					) : (
+					return (
 						<SideContent
 							key={index}
 							onClick={() => handleClick(item)}
+							active={item.active}
 						>
 							<SideIcon>
 								<FontAwesomeIcon icon={item.icon} />

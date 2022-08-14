@@ -4,6 +4,7 @@ import UserLayout from '../layouts/UserLayout';
 import PlantReport from '../pages/user/PlantReport';
 import GrowthObservation from '../pages/user/GrowthObservation';
 import CropEstimation from '../pages/user/CropsEstimation';
+import Setting from '../pages/user/Settings';
 
 export default function Router() {
     return (
@@ -12,6 +13,7 @@ export default function Router() {
                 <Route path="dashboard" element={<PlantReport />} />
                 <Route path="growth" element={<GrowthObservation />} />
                 <Route path="estimation" element={<CropEstimation />} />
+                <Route path="settings" element={<Setting />} />
             </Route>
         </Routes>
     )
