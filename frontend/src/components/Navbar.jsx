@@ -1,8 +1,9 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 import { setTitle } from "../features/headTitle/slice";
 
@@ -96,6 +97,7 @@ const SideIcon = styled.div`
 
 let items = [
 	{
+		id: 1,
 		name: "Plant report",
 		exName: "Dashboard",
 		path: "/user/dashboard",
@@ -103,6 +105,7 @@ let items = [
 		active: true,
 	},
 	{
+		id: 2,
 		name: "Growth Observation",
 		exName: "Growth Observation",
 		path: "/user/growth",
@@ -110,6 +113,7 @@ let items = [
 		active: false,
 	},
 	{
+		id: 3,
 		name: "Crops Estimation",
 		exName: "Crops Estimation",
 		path: "/user/estimation",
@@ -121,12 +125,21 @@ let items = [
 export default function Navbar() {
 	let navigate = useNavigate();
 	let dispatch = useDispatch();
+	let location = useLocation();
+
+	useEffect(() => {
+		if (location) {
+			const item = items.find(item => location.pathname === item.path);
+
+			if (item) {
+				dispatch(setTitle(item.exName));
+			}
+		}
+	}, [dispatch, location]);
 
 	function handleClick(item) {
 		navigate(item.path);
-
-		dispatch(setTitle(item.exName));
-
+		
 		items.forEach((i) => {
 			i.active = false;
 			if (i.path === item.path) {
