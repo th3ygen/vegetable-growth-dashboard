@@ -285,7 +285,7 @@ export default function PlantReportChart() {
 
 		// Add series
 		// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-		function makeSeries(name, fieldName) {
+		function makeSeries(r, chart, name, fieldName) {
 			let series = chart.series.push(
 				am5xy.ColumnSeries.new(r, {
 					name: name,
@@ -323,13 +323,13 @@ export default function PlantReportChart() {
 			legend.data.push(series);
 		}
 
-		makeSeries("Week 1", "week1");
-		makeSeries("Week 2", "week2");
-		makeSeries("Week 3", "week3");
-		makeSeries("Week 4", "week4");
-		makeSeries("Week 5", "week5");
-		makeSeries("Week 6", "week6");
-		makeSeries("Week 7", "week7");
+		makeSeries(r, chart, "Week 1", "week1");
+		makeSeries(r, chart, "Week 2", "week2");
+		makeSeries(r, chart, "Week 3", "week3");
+		makeSeries(r, chart, "Week 4", "week4");
+		makeSeries(r, chart, "Week 5", "week5");
+		makeSeries(r, chart, "Week 6", "week6");
+		makeSeries(r, chart, "Week 7", "week7");
 
 		setBarSeries(seriess);
 
