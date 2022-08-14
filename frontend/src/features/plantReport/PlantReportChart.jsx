@@ -29,35 +29,45 @@ export default function PlantReportChart() {
 	const [heatSeries, setHeatSeries] = useState({});
 	const [barSeries, setBarSeries] = useState([]);
 	const [barYAxis, setBarYAxis] = useState({});
-    const [heatChart, setHeatChart] = useState(null);
-    const [barChart, setBarChart] = useState(null);
+	const [heatChart, setHeatChart] = useState(null);
+	const [barChart, setBarChart] = useState(null);
 
 	const mqtt = useMqtt();
 
 	useEffect(() => {
 		if (status === "connected" && mqtt) {
 			mqtt.subscribe("justGood/data/+");
+			mqtt.subscribe("test");
 
 			mqtt.on("message", (topic, message) => {
-				let data = JSON.parse(message);
+				if (topic.includes("justGood/data/")) {
+					let data = JSON.parse(message);
 
-				for (let d of data) {
-					d["name"] = d.label.split(" ")[0];
-					if (!usedColor.current[d["name"]]) {
-						usedColor.current[d["name"]] =
-							COLOR[Object.keys(usedColor.current).length];
+					for (let d of data) {
+						d["name"] = d.label.split(" ")[0];
+						if (!usedColor.current[d["name"]]) {
+							usedColor.current[d["name"]] =
+								COLOR[Object.keys(usedColor.current).length];
+						}
+
+						d["week"] = parseInt(d.label.split(" ")[1][1]);
+						d["settings"] = {
+							fill: usedColor.current[d["name"]] || "#818e09",
+						};
+
+						delete d["label"];
 					}
 
-					d["week"] = parseInt(d.label.split(" ")[1][1]);
-					d["settings"] = {
-						fill: usedColor.current[d["name"]] || "#818e09",
-					};
-
-					delete d["label"];
-				}
-
-				setData(data);
+					setData(data);
+				} else {
+                    console.log('other data', topic, message.toString());
+                }
 			});
+
+            return () => {
+                mqtt.unsubscribe("justGood/data/+");
+                mqtt.unsubscribe("test");
+            }
 		}
 	}, [mqtt, status]);
 
@@ -66,7 +76,7 @@ export default function PlantReportChart() {
 			if (heatSeries) {
 				heatSeries.data.setAll(data);
 
-                heatChart.appear(1000, 100)
+				heatChart.appear(1000, 100);
 			}
 
 			if (barSeries) {
@@ -95,7 +105,7 @@ export default function PlantReportChart() {
 					s.data.setAll(g);
 				}
 
-                barChart.appear(1000, 100);
+				barChart.appear(1000, 100);
 			}
 		}
 	}, [data, heatSeries, barSeries, barYAxis, barChart, heatChart]);
@@ -225,7 +235,7 @@ export default function PlantReportChart() {
 		);
 
 		setHeatSeries(bubbleSeries);
-        setHeatChart(chart);
+		setHeatChart(chart);
 
 		bubbleSeries.appear(1000);
 		/* chart.appear(1000, 100); */
@@ -326,7 +336,7 @@ export default function PlantReportChart() {
 		// Make stuff animate on load
 		// https://www.amcharts.com/docs/v5/concepts/animations/
 		/* chart.appear(1000, 100); */
-        setBarChart(chart);
+		setBarChart(chart);
 	}
 
 	useSingleEffect(() => {
