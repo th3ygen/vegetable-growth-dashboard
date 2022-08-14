@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "antd": "^4.22.4",
     "concurrently": "^7.3.0"
   }
 }
