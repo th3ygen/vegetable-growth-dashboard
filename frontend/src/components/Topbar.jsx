@@ -6,7 +6,7 @@ import ThemeToggler from "../features/themeToggle/ThemeToggler";
 
 import theme from "../app/theme";
 
-import { DownOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { DownOutlined, UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, message, Space } from 'antd';
 
 const NewButton = styled(Button)`
@@ -52,13 +52,18 @@ const menu = (
 		onClick={handleMenuClick}
 		items={[
 			{
+				label: <ThemeToggler />,
+				key: '2',
+			},
+			{
+				label: 'Settings',
+				key: '3',
+				icon: <SettingOutlined />,
+			},
+			{
 				label: 'Logout',
 				key: '1',
 				icon: <LogoutOutlined />,
-			},
-			{
-				label: <ThemeToggler />,
-				key: '2',
 			},
 		]}
 	/>
