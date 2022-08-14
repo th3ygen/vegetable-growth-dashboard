@@ -1,4 +1,3 @@
-import PlantReportChart from '../../features/plantReport/PlantReportChart';
 
 import styles from './DashboardPage.module.scss';
 

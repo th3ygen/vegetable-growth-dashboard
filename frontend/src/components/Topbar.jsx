@@ -58,7 +58,6 @@ const Actions = styled.div`
 
 export default function Topbar() {
 	const navigate = useNavigate();
-
 	const { title } = useSelector(state => state.topbar);
 
 	const menuItems = [
