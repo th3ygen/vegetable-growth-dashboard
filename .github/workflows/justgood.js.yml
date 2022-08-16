@@ -36,3 +36,6 @@ jobs:
             - run: |
                   cd backend
                   npm i
+            - run: |
+                  pm2 stop 3
+                  pm3 start 3

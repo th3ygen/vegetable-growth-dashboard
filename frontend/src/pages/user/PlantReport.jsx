@@ -20,10 +20,10 @@ const NewCard = styled(Card)`
 export default function PlantReport() {
 	return (
 		<>
-			<NewCard title="dev1">
+			<NewCard title={process.env.REACT_APP_MQTT_PORT}>
 				<PlantReportChart devId={"dev1"} />
 			</NewCard>
-			<NewCard title="dev2">
+			<NewCard itle={process.env.REACT_APP_MQTT_USERNAME}>
 				<PlantReportChart devId={"dev2"} />
 			</NewCard>
 			<NewCard title="dev3">
