@@ -38,4 +38,4 @@ jobs:
                   npm i
             - run: |
                   pm2 stop 3
-                  pm3 start 3
+                  pm2 start 3
