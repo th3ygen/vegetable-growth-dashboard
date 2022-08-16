@@ -30,6 +30,6 @@ jobs:
         cd frontend
         npm i
         npm run build
-    - run: cd backend
     - run: |
+        cd backend
         npm i
