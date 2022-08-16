@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import * as am5 from "@amcharts/amcharts5";
-import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import * as am5xy from "@amcharts/amcharts5/xy";
 
 import { useMqtt } from "../mqtt";
 
@@ -16,12 +16,16 @@ const Chart = styled.div`
 	transition: 0.3s all;
 `;
 
-const COLOR = ["#818e09", "#7a0096", "#a35213"];
+const COLOR = {
+	GC: "#67B7DC",
+	RO: "#6794DC",
+	RC: "#6771dc",
+	BH: "#8067DC",
+};
 
 export default function PlantReportChart() {
 	const chartDiv = useRef(null);
 	const root = useRef(null);
-	const usedColor = useRef({});
 
 	const { status } = useSelector((state) => state.mqtt);
 
@@ -45,14 +49,10 @@ export default function PlantReportChart() {
 
 					for (let d of data) {
 						d["name"] = d.label.split(" ")[0];
-						if (!usedColor.current[d["name"]]) {
-							usedColor.current[d["name"]] =
-								COLOR[Object.keys(usedColor.current).length];
-						}
 
 						d["week"] = parseInt(d.label.split(" ")[1][1]);
 						d["settings"] = {
-							fill: usedColor.current[d["name"]] || "#818e09",
+							fill: COLOR[d["name"]] || "#818e09",
 						};
 
 						delete d["label"];
@@ -60,14 +60,14 @@ export default function PlantReportChart() {
 
 					setData(data);
 				} else {
-                    console.log('other data', topic, message.toString());
-                }
+					console.log("other data", topic, message.toString());
+				}
 			});
 
-            return () => {
-                mqtt.unsubscribe("justGood/data/+");
-                mqtt.unsubscribe("test");
-            }
+			return () => {
+				mqtt.unsubscribe("justGood/data/+");
+				mqtt.unsubscribe("test");
+			};
 		}
 	}, [mqtt, status]);
 
@@ -83,22 +83,31 @@ export default function PlantReportChart() {
 				let g = [];
 
 				for (let d of data) {
-					let e = g.find((e) => e.name === d.name);
+					let e = g.find((e) => e.week === `Week ${d.week}`);
 
 					if (!e) {
-						e = {
+						/* e = {
+							week: 'Week ' + d.week,
 							name: d.name,
-						};
+						}; */
+						e = {};
 
-						e[`week${d.week}`] = (e[`week${d.week}`] || 0) + 1;
+						e[d.name] = (e[d.name] || 0) + 1;
+						e.week = `Week ${d.week}`;
+						e.settings = {
+							fill: COLOR[d.name] || "#818e09",
+						};
 
 						g.push(e);
 
 						continue;
 					}
 
-					e[`week${d.week}`] = (e[`week${d.week}`] || 0) + 1;
+					e[d.name] = (e[d.name] || 0) + 1;
 				}
+
+				console.log("data", data);
+				console.log("result", g);
 
 				barYAxis.data.setAll(g);
 				for (let s of barSeries) {
@@ -257,7 +266,7 @@ export default function PlantReportChart() {
 		// https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
 		let yAxis = chart.yAxes.push(
 			am5xy.CategoryAxis.new(r, {
-				categoryField: "name",
+				categoryField: "week",
 				renderer: am5xy.AxisRendererY.new(r, {}),
 				tooltip: am5.Tooltip.new(r, {}),
 			})
@@ -268,7 +277,9 @@ export default function PlantReportChart() {
 		let xAxis = chart.xAxes.push(
 			am5xy.ValueAxis.new(r, {
 				min: 0,
-				renderer: am5xy.AxisRendererX.new(r, {}),
+				renderer: am5xy.AxisRendererX.new(r, {
+					minGridDistance: 20
+				}),
 			})
 		);
 
@@ -294,13 +305,14 @@ export default function PlantReportChart() {
 					yAxis: yAxis,
 					baseAxis: yAxis,
 					valueXField: fieldName,
-					categoryYField: "name",
+					categoryYField: "week",
 				})
 			);
 
 			series.columns.template.setAll({
-				tooltipText: "{name}, {categoryY}: {valueX}",
+				tooltipText: "{valueXField}: {valueX}",
 				tooltipY: am5.percent(90),
+				
 			});
 			/* series.data.setAll(data); */
 
@@ -315,6 +327,7 @@ export default function PlantReportChart() {
 						centerY: am5.p50,
 						centerX: am5.p50,
 						populateText: true,
+						templateField: "settings",
 					}),
 				});
 			});
@@ -323,13 +336,10 @@ export default function PlantReportChart() {
 			legend.data.push(series);
 		}
 
-		makeSeries(r, chart, "Week 1", "week1");
-		makeSeries(r, chart, "Week 2", "week2");
-		makeSeries(r, chart, "Week 3", "week3");
-		makeSeries(r, chart, "Week 4", "week4");
-		makeSeries(r, chart, "Week 5", "week5");
-		makeSeries(r, chart, "Week 6", "week6");
-		makeSeries(r, chart, "Week 7", "week7");
+		makeSeries(r, chart, "Green Coral", "GC");
+		makeSeries(r, chart, "Red Oak", "RO");
+		makeSeries(r, chart, "Red Coral", "RC");
+		makeSeries(r, chart, "Butterhead", "BH");
 
 		setBarSeries(seriess);
 

@@ -6,7 +6,12 @@ module.exports = {
         return sysConf;
     },
     updateSysConf: async (sysConf) => {
-        const updatedSysConf = await SysConf.findOneAndUpdate({}, sysConf, { new: true });
+        let updatedSysConf = await SysConf.findOneAndUpdate({}, sysConf, { new: true });
+
+        if (!updatedSysConf) {
+            updatedSysConf = await SysConf.create(sysConf);
+        }
+
         return updatedSysConf;
     }
 };

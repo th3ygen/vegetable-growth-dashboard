@@ -16,9 +16,15 @@ import {
 	PlusOutlined,
 	MinusCircleOutlined,
 } from "@ant-design/icons";
+import { useSingleEffect } from 'react-haiku';
 import { useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 
 import styled from "styled-components";
+import { useEffect } from "react";
+
+import { setPlantsType } from "../../features/settings/slice";
 
 const { Title } = Typography;
 
@@ -53,6 +59,10 @@ const ColorItemBox = styled.div`
 `;
 
 export default function Settings() {
+	const dispatch = useDispatch();
+
+	const [form] = Form.useForm();
+
 	const colors = [
 		{
 			value: "#00ff00",
@@ -84,6 +94,28 @@ export default function Settings() {
 		message.error("Failed to update settings");
 	};
 
+	const getData = async () => {
+		const response = await axios.get("/api/sysconf/");
+
+		if (response.status === 200) {
+			
+			delete response.data._id;
+			delete response.data.__v;
+			
+			if (response.data.plantTypes) {
+				response.data.plantTypes.forEach((d) => delete d._id);
+				console.log(response.data);
+				dispatch(setPlantsType(response.data.plantTypes));
+
+				form.setFieldsValue(response.data);
+			}
+		}
+	};
+
+	useSingleEffect(() => {
+		getData();
+	});
+
 	return (
 		<>
 			<Wrapper>
@@ -95,8 +127,9 @@ export default function Settings() {
 					onFinish={onFinish}
 					onFinishFailed={onFinishFailed}
 					autoComplete="off"
+					form={form}
 				>
-					<Form.List name="crops">
+					<Form.List name="plantTypes">
 						{(fields, { add, remove }) => {
 							return (
 								<>
@@ -119,7 +152,7 @@ export default function Settings() {
 										>
 											<Form.Item
 												label="Crop name"
-												name={[field.name, "name"]}
+												name={[field.name, "label"]}
 												rules={[
 													{
 														required: true,
@@ -136,7 +169,7 @@ export default function Settings() {
 											</Form.Item>
 											<Form.Item
 												label="Short form (key)"
-												name={[field.key, "key"]}
+												name={[field.key, "short"]}
 												rules={[
 													{
 														required: true,
@@ -149,7 +182,7 @@ export default function Settings() {
 											</Form.Item>
 											<Form.Item
 												label="Crop"
-												name={[field.key, "crop"]}
+												name={[field.key, "color"]}
 												rules={[
 													{
 														required: true,
@@ -171,6 +204,12 @@ export default function Settings() {
 							);
 						}}
 					</Form.List>
+
+					<Form.Item>
+						<Button type="primary" htmlType="submit">
+							Update
+						</Button>
+					</Form.Item>
 				</Form>
 			</Wrapper>
 		</>
