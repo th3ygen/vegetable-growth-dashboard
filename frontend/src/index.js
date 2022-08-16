@@ -18,11 +18,11 @@ root.render(
 	<React.StrictMode>
 		<ReduxProvider store={store}>
 			<MQTTConnector
-				protocol="wss"
-				broker="mqtt.sollab.dev"
-				port="8083"
-				username="mqtt"
-				password="syafiq29"
+				protocol={process.env.REACT_APP_MQTT_PROTOCOL}
+				broker={process.env.REACT_APP_MQTT_BROKER}
+				port={process.env.REACT_APP_MQTT_PORT}
+				username={process.env.REACT_APP_MQTT_USERNAME}
+				password={process.env.REACT_APP_MQTT_PASSWORD}
 			>
 				<BrowserRouter>
 					<App />
