@@ -1,14 +1,12 @@
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import ThemeToggler from "../features/themeToggle/ThemeToggler";
 
 import theme from "../app/theme";
 
-import { DownOutlined, UserOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu, message, Space, PageHeader } from 'antd';
+import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu, PageHeader, Space } from 'antd';
 
 const NewButton = styled(Button)`
 	width: 150px !important;
@@ -66,13 +64,6 @@ const Title = styled(PageHeader)`
 		padding-left: 15px;
 	}
 `;
-
-const Actions = styled.div`
-	width: 200px;
-	position: relative;
-`;
-
-
 
 
 export default function Topbar() {

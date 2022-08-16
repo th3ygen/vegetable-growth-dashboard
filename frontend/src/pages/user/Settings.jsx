@@ -1,28 +1,15 @@
 import {
-	Form,
-	Input,
-	Button,
-	message,
-	Checkbox,
-	Typography,
-	Divider,
-	Dropdown,
-	Menu,
-	Space,
-	Select,
-} from "antd";
-import {
-	DownOutlined,
-	PlusOutlined,
-	MinusCircleOutlined,
+	MinusCircleOutlined, PlusOutlined
 } from "@ant-design/icons";
-import { useSingleEffect } from 'react-haiku';
-import { useState } from "react";
+import {
+	Button, Divider, Form,
+	Input, message, Select, Space, Typography
+} from "antd";
 import axios from "axios";
+import { useSingleEffect } from 'react-haiku';
 import { useDispatch } from "react-redux";
 
 import styled from "styled-components";
-import { useEffect } from "react";
 
 import { setPlantsType } from "../../features/settings/slice";
 
