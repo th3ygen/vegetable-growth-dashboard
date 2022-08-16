@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useSingleEffect } from "react-haiku";
 
 import PlantReportChart from "../../features/plantReport/PlantReportChart";
 
@@ -18,12 +19,21 @@ const NewCard = styled(Card)`
 `;
 
 export default function PlantReport() {
+	useSingleEffect(() => {
+		console.log(process.env);
+		console.log(process.env.REACT_APP_MQTT_BROKER);
+		console.log(process.env.REACT_APP_MQTT_PROTOCOL);
+		console.log(process.env.REACT_APP_MQTT_PORT);
+		console.log(process.env.REACT_APP_MQTT_USERNAME);
+		console.log(process.env.REACT_APP_MQTT_PASSWORD);
+	})
+
 	return (
 		<>
-			<NewCard title={process.env.REACT_APP_MQTT_PORT}>
+			<NewCard title="dev1">
 				<PlantReportChart devId={"dev1"} />
 			</NewCard>
-			<NewCard itle={process.env.REACT_APP_MQTT_USERNAME}>
+			<NewCard title="dev2">
 				<PlantReportChart devId={"dev2"} />
 			</NewCard>
 			<NewCard title="dev3">

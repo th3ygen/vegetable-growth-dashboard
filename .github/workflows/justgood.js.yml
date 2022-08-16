@@ -9,7 +9,8 @@ on:
     pull_request:
         branches: ["prod"]
 env:
-    REACT_APP_MQTT_PROTOCOL: "mqtt.sollab.dev"
+    REACT_APP_MQTT_PROTOCOL: "wss"
+    REACT_APP_MQTT_BROKER: mqtt.sollab.dev
     REACT_APP_MQTT_PORT: "8083"
     REACT_APP_MQTT_USERNAME: ${{ secrets.MQTT_USERNAME }}
     REACT_APP_MQTT_PASSWORD: ${{ secrets.MQTT_PASSWORD }}
