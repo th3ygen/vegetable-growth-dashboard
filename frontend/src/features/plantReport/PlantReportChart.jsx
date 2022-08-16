@@ -23,7 +23,7 @@ const COLOR = {
 	BH: "#8067DC",
 };
 
-export default function PlantReportChart() {
+export default function PlantReportChart(props) {
 	const chartDiv = useRef(null);
 	const root = useRef(null);
 
@@ -39,37 +39,38 @@ export default function PlantReportChart() {
 	const mqtt = useMqtt();
 
 	useEffect(() => {
-		if (status === "connected" && mqtt) {
-			mqtt.subscribe("justGood/data/+");
-			mqtt.subscribe("test");
+		if (props.devId) {
+			if (status === "connected" && mqtt) {
+				mqtt.subscribe(`justGood/data/${props.devId}`);
 
-			mqtt.on("message", (topic, message) => {
-				if (topic.includes("justGood/data/")) {
-					let data = JSON.parse(message);
+				mqtt.on("message", (topic, message) => {
+					if (topic.includes("justGood/data/")) {
+						let data = JSON.parse(message);
 
-					for (let d of data) {
-						d["name"] = d.label.split(" ")[0];
+						for (let d of data) {
+							d["name"] = d.label.split(" ")[0];
 
-						d["week"] = parseInt(d.label.split(" ")[1][1]);
-						d["settings"] = {
-							fill: COLOR[d["name"]] || "#818e09",
-						};
+							d["week"] = parseInt(d.label.split(" ")[1][1]);
+							d["settings"] = {
+								fill: COLOR[d["name"]] || "#818e09",
+							};
 
-						delete d["label"];
+							delete d["label"];
+						}
+
+						setData(data);
+					} else {
+						console.log("other data", topic, message.toString());
 					}
+				});
 
-					setData(data);
-				} else {
-					console.log("other data", topic, message.toString());
-				}
-			});
-
-			return () => {
-				mqtt.unsubscribe("justGood/data/+");
-				mqtt.unsubscribe("test");
-			};
+				return () => {
+					mqtt.unsubscribe("justGood/data/+");
+					mqtt.unsubscribe("test");
+				};
+			}
 		}
-	}, [mqtt, status]);
+	}, [mqtt, props.devId, status]);
 
 	useEffect(() => {
 		if (data.length > 0) {
@@ -124,7 +125,7 @@ export default function PlantReportChart() {
 			am5xy.XYChart.new(r, {
 				panX: true,
 				panY: true,
-				wheelY: "zoomXY",
+				/* wheelY: "zoomXY", */
 				width: am5.percent(w),
 			})
 		);
@@ -255,8 +256,8 @@ export default function PlantReportChart() {
 			am5xy.XYChart.new(r, {
 				panX: true,
 				panY: false,
-				wheelX: "panX",
-				wheelY: "zoomX",
+				/* wheelX: "panX",
+				wheelY: "zoomX", */
 				layout: r.verticalLayout,
 				width: am5.percent(w),
 			})
@@ -278,7 +279,7 @@ export default function PlantReportChart() {
 			am5xy.ValueAxis.new(r, {
 				min: 0,
 				renderer: am5xy.AxisRendererX.new(r, {
-					minGridDistance: 20
+					minGridDistance: 20,
 				}),
 			})
 		);
@@ -312,7 +313,6 @@ export default function PlantReportChart() {
 			series.columns.template.setAll({
 				tooltipText: "{valueXField}: {valueX}",
 				tooltipY: am5.percent(90),
-				
 			});
 			/* series.data.setAll(data); */
 

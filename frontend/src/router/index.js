@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import UserLayout from '../layouts/UserLayout';
 import PlantReport from '../pages/user/PlantReport';
@@ -14,7 +14,10 @@ export default function Router() {
                 <Route path="growth" element={<GrowthObservation />} />
                 <Route path="estimation" element={<CropEstimation />} />
                 <Route path="settings" element={<Setting />} />
+
+                {/* redirect from * */}
             </Route>
+                <Route path="*" element={ <Navigate to="/user/dashboard" replace={true} />} />
         </Routes>
     )
 }

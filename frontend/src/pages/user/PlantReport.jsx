@@ -20,8 +20,14 @@ const NewCard = styled(Card)`
 export default function PlantReport() {
 	return (
 		<>
-			<NewCard title="Growth">
-				<PlantReportChart />
+			<NewCard title="dev1">
+				<PlantReportChart devId={"dev1"} />
+			</NewCard>
+			<NewCard title="dev2">
+				<PlantReportChart devId={"dev2"} />
+			</NewCard>
+			<NewCard title="dev3">
+				<PlantReportChart devId={"dev3"} />
 			</NewCard>
 		</>
 	);
