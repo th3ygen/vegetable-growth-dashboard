@@ -47,6 +47,7 @@ export default function PlantReportChart(props) {
 					if (topic.includes("justGood/data/")) {
 						let data = JSON.parse(message);
 
+						let yMax = 0;
 						for (let d of data) {
 							d["name"] = d.label.split(" ")[0];
 
@@ -55,7 +56,15 @@ export default function PlantReportChart(props) {
 								fill: COLOR[d["name"]] || "#818e09",
 							};
 
+							if (d.y > yMax) {
+								yMax = d.y;
+							}
+
 							delete d["label"];
+						}
+
+						for (let d of data) {
+							d.y = yMax - d.y;
 						}
 
 						setData(data);
